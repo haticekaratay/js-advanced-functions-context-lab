@@ -1,13 +1,50 @@
-/* Your Code Here */
+function createEmployeeRecord([firstName,familyName,title,payRate]){
+    return{
+        firstName: firstName,
+        familyName: familyName,
+        title: title,
+        payPerHour: payRate,
+        timeInEvents: [],
+        timeOutEvents: []
+    }
+};
 
-/*
- We're giving you this function. Take a look at it, you might see some usage
- that's new and different. That's because we're avoiding a well-known, but
- sneaky bug that we'll cover in the next few lessons!
+function createEmployeeRecords(allEmployees){
+    return allEmployees.map(createEmployeeRecord)
+};
+function createTimeInEvent(time){
+    
+    let hour = time.split(" ")[1]
+    let date = time.split(" ")[0]
+    this.timeInEvents.push({
+        type: "TimeIn",
+        hour: parseInt(hour),
+        date: date
+    })
+    return this;
+};
 
- As a result, the lessons for this function will pass *and* it will be available
- for you to use if you need it!
- */
+function createTimeOutEvent(time){
+
+    let hour = time.split(" ")[1]
+    let date = time.split(" ")[0]
+    this.timeOutEvents.push({
+       type: "TimeOut",
+       date: date,
+       hour: parseInt(hour)
+   })
+   return this;
+};
+
+function hoursWorkedOnDate(date){
+    let timeIn = this.timeInEvents.find(timeIn=>timeIn.date === date).hour
+    let timeOut = this.timeOutEvents.find(timeOut=>timeOut.date === date).hour
+    return (timeOut- timeIn)/100
+};
+
+function wagesEarnedOnDate(date){
+    return hoursWorkedOnDate.call(this,date) * this.payPerHour
+};
 
 let allWagesFor = function () {
     let eligibleDates = this.timeInEvents.map(function (e) {
@@ -16,7 +53,16 @@ let allWagesFor = function () {
 
     let payable = eligibleDates.reduce(function (memo, d) {
         return memo + wagesEarnedOnDate.call(this, d)
-    }.bind(this), 0) // <== Hm, why did we need to add bind() there? We'll discuss soon!
+    }.bind(this), 0) 
 
     return payable
+};
+
+function calculatePayroll(employees){
+    return employees.reduce((sum,employee) => sum + allWagesFor.call(employee),0)
+};
+
+function findEmployeeByFirstName(employeesArray,name){
+   return employeesArray.find(employee => employee.firstName === name);
 }
+
